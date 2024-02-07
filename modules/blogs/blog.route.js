@@ -1,63 +1,62 @@
 const router = require("express").Router();
+const BlogController = require("./blog.controller");
 
-router.get("/", (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
-    // Database call
-    res.json({ msg: "Hello from get route" });
+    const result = await BlogController.getAll();
+    res.json({ data: result });
   } catch (e) {
     next(e);
   }
 });
 
-router.get("/:id", (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    // Database call
-    res.json({ msg: `Hello from get route ${id}` });
+    const result = await BlogController.getById(id);
+    res.json({ data: result });
   } catch (e) {
     next(e);
   }
 });
-router.post("/", (req, res, next) => {
+router.post("/", async (req, res, next) => {
   try {
     const data = req.body;
-    console.log({ data });
+    const result = await BlogController.create(data);
     // Database call
-    res.json({ msg: "Hello from post route" });
+    res.json({ data: result });
   } catch (e) {
     next(e);
   }
 });
-router.put("/:id", (req, res, next) => {
+router.put("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const data = req.body;
-    console.log({ id, data });
+    const result = await BlogController.updateById();
     // Database call
-    res.json({ msg: "Hello from put route" });
-  } catch (e) {
-    next(e);
-  }
-});
-
-router.patch("/:id", (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const data = req.body;
-    console.log({ id, data });
-    // Database call
-    res.json({ msg: "Hello from patch route" });
+    res.json({ data: result });
   } catch (e) {
     next(e);
   }
 });
 
-router.delete("/:id", (req, res, next) => {
+router.patch("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log({ id });
+    const result = await BlogController.updateById();
     // Database call
-    res.json({ msg: "Hello from delete route" });
+    res.json({ data: result });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await BlogController.deleteById();
+    // Database call
+    res.json({ data: result });
   } catch (e) {
     next(e);
   }
