@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const BlogController = require("./blog.controller");
+const { validate } = require("./blog.validator");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -10,7 +11,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", validate, async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await BlogController.getById(id);
@@ -19,7 +20,7 @@ router.get("/:id", async (req, res, next) => {
     next(e);
   }
 });
-router.post("/", async (req, res, next) => {
+router.post("/", validate, async (req, res, next) => {
   try {
     const data = req.body;
     const result = await BlogController.create(data);
@@ -29,10 +30,10 @@ router.post("/", async (req, res, next) => {
     next(e);
   }
 });
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", validate, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await BlogController.updateById();
+    const result = await BlogController.updateById(id, data);
     // Database call
     res.json({ data: result });
   } catch (e) {
@@ -40,10 +41,10 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-router.patch("/:id", async (req, res, next) => {
+router.patch("/:id", validate, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await BlogController.updateById();
+    const result = await BlogController.updateById(id, data);
     // Database call
     res.json({ data: result });
   } catch (e) {
@@ -54,7 +55,7 @@ router.patch("/:id", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await BlogController.deleteById();
+    const result = await BlogController.deleteById(id);
     // Database call
     res.json({ data: result });
   } catch (e) {
