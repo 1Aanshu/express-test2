@@ -1,7 +1,6 @@
 const UserModel = require("./user.model");
 const { hashPassword, comparePassword } = require("../../utils/bcrypt");
 const { mailer } = require("../../services/mailer");
-const { use } = require("./user.route");
 
 const create = (payload) => {
   return UserModel.create(payload);
