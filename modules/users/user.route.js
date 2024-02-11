@@ -10,9 +10,18 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/register", async (req, res, next) => {
   try {
-    const result = await userController.create(req.body);
+    const result = await userController.register(req.body);
+    res.json({ data: result });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.post("/login", async (req, res, next) => {
+  try {
+    const result = await userController.login(req.body);
     res.json({ data: result });
   } catch (e) {
     next(e);
