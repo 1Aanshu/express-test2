@@ -5,6 +5,13 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   phone: Number,
+  roles: {
+    type: [String],
+    enum: ["admin", "user"],
+    default: "user",
+    required: true,
+  },
+  token: String,
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

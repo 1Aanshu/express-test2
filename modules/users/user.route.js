@@ -28,4 +28,22 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
+router.post("/generate-fp-token", async (req, res, next) => {
+  try {
+    const result = await userController.generateFPToken(req.body);
+    res.json({ data: result });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.post("/verify-fp-token", async (req, res, next) => {
+  try {
+    const result = await userController.verifyFPToken(req.body);
+    res.json({ data: result });
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = router;

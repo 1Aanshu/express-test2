@@ -10,12 +10,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const mailer = async (email) => {
+const mailer = async (email, subject, body) => {
   const info = await transporter.sendMail({
     from: '"Blog Mgmt" <aanshu2dwiwedi@gmail.com>',
     to: email,
-    subject: "User Registration ✔",
-    html: "<b>User Registration Completed</b>",
+    subject,
+    html: `<b>${body}</b>`,
   });
 
   return info.messageId;
