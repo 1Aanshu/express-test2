@@ -1,8 +1,18 @@
 const JWT = require("jsonwebtoken");
 
-const signJWT = () => {};
+const signJWT = (payload) => {
+  return JWT.sign(
+    {
+      data: payload,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_DURATION }
+  );
+};
 
-const verifyJWT = () => {};
+const verifyJWT = (token) => {
+  return JWT.verify(token, process.env.JWT_SECRET);
+};
 
 const generateSixDigitToken = () => {};
 
