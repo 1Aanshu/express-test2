@@ -11,4 +11,4 @@ const checkRole = (sysRole) => {
   };
 };
 
-module.exports = checkRole();
+module.exports = { checkRole };

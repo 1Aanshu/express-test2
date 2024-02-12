@@ -14,6 +14,8 @@ const verifyJWT = (token) => {
   return JWT.verify(token, process.env.JWT_SECRET);
 };
 
-const generateSixDigitToken = () => {};
+const generateSixDigitToken = () => {
+  return Math.floor(100000 + Math.random() * 900000);
+};
 
 module.exports = { signJWT, verifyJWT, generateSixDigitToken };

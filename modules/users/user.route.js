@@ -3,7 +3,7 @@ const userController = require("./user.controller");
 
 const { checkRole } = require("../../utils/sessionManager");
 
-router.get("/", checkRole["admin"], async (req, res, next) => {
+router.get("/", checkRole(["admin"]), async (req, res, next) => {
   try {
     const result = await userController.getAll();
     res.json({ data: result });
@@ -12,7 +12,7 @@ router.get("/", checkRole["admin"], async (req, res, next) => {
   }
 });
 
-router.post("/", checkRole["admin"], async (req, res, next) => {
+router.post("/", checkRole(["admin"]), async (req, res, next) => {
   try {
     const result = await userController.create(req.body);
     res.json({ data: result });
