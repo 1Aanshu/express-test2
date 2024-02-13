@@ -1,7 +1,7 @@
 const UserModel = require("./user.model");
 const { hashPassword, comparePassword } = require("../../utils/bcrypt");
 const { mailer } = require("../../services/mailer");
-const { signJWT } = require("../../utils/token");
+const { signJWT, generateSixDigitToken } = require("../../utils/token");
 
 const create = (payload) => {
   return UserModel.create(payload);
@@ -75,6 +75,44 @@ const verifyFPToken = async (payload) => {
   return "Password changed Successfully";
 };
 
+const resetPassword = async (payload) => {
+  const { userId, password } = payload;
+  if (!userId || !password) throw new Error("User or password missing");
+  const user = await UserModel.findOne({ _id: userId });
+  if (!user) throw new Error("User not found");
+  await UserModel.updateOne(
+    { _id: user._id },
+    { password: hashPassword(password) }
+  );
+  return "Password reset Successfully";
+};
+
+const changePassword = async (payload) => {
+  const { oldPassword, newPassword, userId } = payload;
+  if (!oldPassword || !newPassword || !userId)
+    throw new Error("Something is missing");
+  const user = await UserModel.findOne({ _id: userId }).select("+password");
+  if (!user) throw new Error("User not found");
+  const isValidOldPw = comparePassword(oldPassword, user.password);
+  if (!isValidOldPw) throw new Error("Passsword didn't match");
+  await UserModel.updateOne(
+    { _id: user._id },
+    { password: hashPassword(newPassword) }
+  );
+  return "Password changed successfully";
+};
+
+const getProfile = (userId) => {
+  return UserModel.findOne({ _id: userId });
+};
+
+const updateProfile = async (userId, payload) => {
+  const user = await UserModel.findOne({ _id: userId });
+  if (!user) throw new Error("User not Found");
+  await UserModel.updateOne({ _id: user._id }, payload);
+  return "Profile updated Successfully";
+};
+
 module.exports = {
   create,
   getAll,
@@ -85,4 +123,8 @@ module.exports = {
   login,
   generateFPToken,
   verifyFPToken,
+  resetPassword,
+  changePassword,
+  getProfile,
+  updateProfile,
 };
