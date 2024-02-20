@@ -2,6 +2,12 @@ const router = require("express").Router();
 const userController = require("./user.controller");
 
 const { checkRole } = require("../../utils/sessionManager");
+const {
+  validate,
+  resetvalidate,
+  loginvalidate,
+  uservalidate,
+} = require("./user.validator");
 
 router.get("/", checkRole(["admin"]), async (req, res, next) => {
   try {
@@ -12,7 +18,7 @@ router.get("/", checkRole(["admin"]), async (req, res, next) => {
   }
 });
 
-router.post("/", checkRole(["admin"]), async (req, res, next) => {
+router.post("/", validate, checkRole(["admin"]), async (req, res, next) => {
   try {
     const result = await userController.create(req.body);
     res.json({ data: result });
@@ -21,7 +27,7 @@ router.post("/", checkRole(["admin"]), async (req, res, next) => {
   }
 });
 
-router.post("/register", async (req, res, next) => {
+router.post("/register", validate, async (req, res, next) => {
   try {
     const result = await userController.register(req.body);
     res.json({ data: result });
@@ -30,7 +36,7 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
-router.post("/login", async (req, res, next) => {
+router.post("/login", loginvalidate, async (req, res, next) => {
   try {
     const result = await userController.login(req.body);
     res.json({ data: result });
@@ -59,6 +65,7 @@ router.post("/verify-fp-token", async (req, res, next) => {
 
 router.patch(
   "/reset-password",
+  resetvalidate,
   checkRole(["admin"]),
   async (req, res, next) => {
     try {
@@ -94,15 +101,20 @@ router.get("/get-profile", checkRole(["user"]), async (req, res, next) => {
   }
 });
 
-router.put("/update-profile", checkRole(["user"]), async (req, res, next) => {
-  try {
-    const { userId, ...rest } = req.body;
-    if (!userId) throw new Error("User Id is required");
-    const result = await userController.updateProfile(userId, rest);
-    res.json({ data: result });
-  } catch (e) {
-    next(e);
+router.put(
+  "/update-profile",
+  uservalidate,
+  checkRole(["user"]),
+  async (req, res, next) => {
+    try {
+      const { userId, ...rest } = req.body;
+      if (!userId) throw new Error("User Id is required");
+      const result = await userController.updateProfile(userId, rest);
+      res.json({ data: result });
+    } catch (e) {
+      next(e);
+    }
   }
-});
+);
 
 module.exports = router;

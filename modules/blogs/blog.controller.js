@@ -20,4 +20,23 @@ const deleteById = (_id) => {
   return BlogModel.deleteOne({ _id });
 };
 
-module.exports = { create, getAll, getById, updateById, deleteById };
+const getAuthorBlogs = (name) => {
+  return BlogModel.aggregate();
+};
+
+const updateStatus = async (_id) => {
+  const blog = await BlogModel.findOne({ _id });
+  if (!blog) throw new Error("Blog not found");
+  const payload = { status: blog?.status === "draft" ? "published" : "draft" };
+  return BlogModel.updateOne({ _id }, payload);
+};
+
+module.exports = {
+  create,
+  getAll,
+  getById,
+  updateById,
+  deleteById,
+  getAuthorBlogs,
+  updateStatus,
+};

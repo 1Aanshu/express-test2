@@ -3,6 +3,7 @@ const { ObjectId } = Schema.Types;
 
 const blogSchema = new Schema({
   title: { type: String, required: [true, "Why no title"] },
+  slug: { type: String, required: true, unique: true },
   tags: [String],
   content: { type: String },
   author: { type: ObjectId, ref: "User", required: true },
